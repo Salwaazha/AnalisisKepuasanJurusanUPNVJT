@@ -679,69 +679,69 @@ elif page == "📈 Visualisasi & Hasil Analisis":
 
             st.markdown("</div>", unsafe_allow_html=True)
 
-# D. Hubungan antara Program Studi dan Persepsi terhadap Jurusan (Pie Chart Dua Variabel)
-if "Program Studi" in data.columns:
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("<div class='chart-title'>Hubungan Program Studi dan Persepsi terhadap Jurusan</div>", unsafe_allow_html=True)
+    # D. Hubungan antara Program Studi dan Persepsi terhadap Jurusan (Pie Chart Dua Variabel)
+    if "Program Studi" in data.columns:
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        st.markdown("<div class='chart-title'>Hubungan Program Studi dan Persepsi terhadap Jurusan</div>", unsafe_allow_html=True)
 
-    # Pilih variabel persepsi lewat dropdown agar interaktif
-    cols_persepsi = [
-        "Relevansi Kurikulum Jurusan dengan Dunia Kerja",
-        "Kesesuaian Jurusan dengan Minat",
-        "Penilaian Prospek Kerja Jurusan"
-    ]
-    persepsi_var = st.selectbox("Pilih variabel persepsi:", cols_persepsi)
+        # Pilih variabel persepsi lewat dropdown agar interaktif
+        cols_persepsi = [
+            "Relevansi Kurikulum Jurusan dengan Dunia Kerja",
+            "Kesesuaian Jurusan dengan Minat",
+            "Penilaian Prospek Kerja Jurusan"
+        ]
+        persepsi_var = st.selectbox("Pilih variabel persepsi:", cols_persepsi)
 
-    # Pastikan kolom tersedia
-    if persepsi_var in data.columns:
-        import plotly.express as px
-        import pandas as pd
+        # Pastikan kolom tersedia
+        if persepsi_var in data.columns:
+            import plotly.express as px
+            import pandas as pd
 
-        # Hitung jumlah kombinasi Program Studi × Persepsi
-        df_group = data.groupby(["Program Studi", persepsi_var]).size().reset_index(name="Jumlah")
+            # Hitung jumlah kombinasi Program Studi × Persepsi
+            df_group = data.groupby(["Program Studi", persepsi_var]).size().reset_index(name="Jumlah")
 
-        # Warna tema ungu pastel elegan
-        purple_palette = ["#E0BBE4", "#957DAD", "#7B68EE", "#512DA8", "#311B92"]
+            # Warna tema ungu pastel elegan
+            purple_palette = ["#E0BBE4", "#957DAD", "#7B68EE", "#512DA8", "#311B92"]
 
-        # Sunburst (pie bertingkat dua)
-        fig = px.sunburst(
-            df_group,
-            path=[persepsi_var, "Program Studi"],
-            values="Jumlah",
-            color=persepsi_var,
-            color_discrete_sequence=purple_palette,
-            width=700,
-            height=700
-        )
+            # Sunburst (pie bertingkat dua)
+            fig = px.sunburst(
+                df_group,
+                path=[persepsi_var, "Program Studi"],
+                values="Jumlah",
+                color=persepsi_var,
+                color_discrete_sequence=purple_palette,
+                width=700,
+                height=700
+            )
 
-        # Layout menyesuaikan dengan tema dashboard
-        fig.update_layout(
-            margin=dict(t=40, b=40, l=20, r=20),
-            paper_bgcolor="var(--background-color)",
-            plot_bgcolor="var(--secondary-background-color)",
-            font=dict(family="Poppins", color="var(--text-color)", size=15),
-        )
+            # Layout menyesuaikan dengan tema dashboard
+            fig.update_layout(
+                margin=dict(t=40, b=40, l=20, r=20),
+                paper_bgcolor="var(--background-color)",
+                plot_bgcolor="var(--secondary-background-color)",
+                font=dict(family="Poppins", color="var(--text-color)", size=15),
+            )
 
-        st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True)
 
-        # Insight otomatis
-        dominan = df_group.groupby(persepsi_var)["Jumlah"].sum().reset_index().sort_values("Jumlah", ascending=False).iloc[0]
-        st.markdown(f"""
-        <div class='insight' 
-            style='background-color: var(--secondary-background-color);
-            border-left:6px solid #7B1FA2;
-            padding:15px; 
-            border-radius:12px; 
-            margin-top:10px;
-            font-family:"Poppins", sans-serif; 
-            color:var(--text-color); 
-            font-size:17px;'>
-            💡 Mayoritas mahasiswa menilai <b>{persepsi_var}</b> sebagai <b>{dominan[persepsi_var]}</b>. 
-            Hasil ini menggambarkan persepsi umum antar jurusan yang cenderung seragam atau dominan di kategori tersebut.
-        </div>
-        """, unsafe_allow_html=True)
+            # Insight otomatis
+            dominan = df_group.groupby(persepsi_var)["Jumlah"].sum().reset_index().sort_values("Jumlah", ascending=False).iloc[0]
+            st.markdown(f"""
+            <div class='insight' 
+                style='background-color: var(--secondary-background-color);
+                border-left:6px solid #7B1FA2;
+                padding:15px; 
+                border-radius:12px; 
+                margin-top:10px;
+                font-family:"Poppins", sans-serif; 
+                color:var(--text-color); 
+                font-size:17px;'>
+                💡 Mayoritas mahasiswa menilai <b>{persepsi_var}</b> sebagai <b>{dominan[persepsi_var]}</b>. 
+                Hasil ini menggambarkan persepsi umum antar jurusan yang cenderung seragam atau dominan di kategori tersebut.
+            </div>
+            """, unsafe_allow_html=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------------------
 # Page: Hubungan Antar Variabel (Korelasi heatmap)
