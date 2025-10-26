@@ -21,14 +21,15 @@ st.set_page_config(
 
 # ---------------------------
 # THEME COLORS & FONTS (consistent purple)
+# Dihapus warna statis teks/background yang menyebabkan masalah di Dark Mode
 # ---------------------------
-PURPLE_MAIN = "#6a0dad"   # utama
+PURPLE_MAIN = "#6a0dad" # utama
 PURPLE_ACCENT = "#9b59b6"
-BG_LIGHT = "#f9f6ff"
-CARD_BG = "#ffffff"
-CARD_BG_DARK = "#1f1530"
-TEXT_LIGHT = "#f7f3ff"
-TEXT_DARK = "#260844"
+# BG_LIGHT = "#f9f6ff"         # Dihapus
+# CARD_BG = "#ffffff"          # Dihapus, akan menggunakan var(--background-color)
+CARD_BG_DARK = "#1f1530" # Ini masih bisa dipakai untuk card mode gelap kustom
+# TEXT_LIGHT = "#f7f3ff"       # Dihapus
+# TEXT_DARK = "#260844"        # Dihapus - DIGANTI DENGAN var(--text-color)
 
 # ---------------------------
 # STYLES - import Poppins font & CSS
@@ -38,12 +39,14 @@ st.markdown(
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
 
-    html, body, [class*="css"]  {{
+    html, body, [class*="css"]  {{
         font-family: 'Poppins', sans-serif;
-        background: linear-gradient(180deg, {BG_LIGHT}, #f3eefb);
+        /* Ganti BG_LIGHT dengan var(--background-color) atau hapus gradient */
+        background: var(--background-color);
     }}
     h1, h2, h3, h4 {{
-        color: {TEXT_DARK};
+        /* Ganti TEXT_DARK dengan var(--text-color) */
+        color: var(--text-color);
         margin: 0;
         padding: 0;
     }}
@@ -54,7 +57,8 @@ st.markdown(
     }}
     .sub-title {{
         text-align: center;
-        color: {TEXT_DARK};
+        /* Ganti TEXT_DARK dengan var(--text-color) */
+        color: var(--text-color);
         margin-top: 4px;
         margin-bottom: 12px;
         font-weight:600;
@@ -62,15 +66,16 @@ st.markdown(
 
     /* Card */
     .card {{
-        background: {CARD_BG};
+        background-color: var(--secondary-background-color);
         border-radius: 14px;
         padding: 14px;
-        box-shadow: 0 8px 24px rgba(106,13,173,0.12);
+        box-shadow: 0 8px 24px var(--shadow-color, rgba(106,13,173,0.12)); 
         border: 1px solid rgba(155,89,182,0.15);
     }}
     .card-dark {{
-        background: {CARD_BG_DARK};
-        color: {TEXT_LIGHT};
+        /* Card Dark kustom Anda, bisa dipertahankan */
+        background: {CARD_BG_DARK}; 
+        color: var(--text-color);
         border-radius: 14px;
         padding: 14px;
         box-shadow: 0 8px 34px rgba(0,0,0,0.35);
@@ -81,21 +86,27 @@ st.markdown(
         padding: 10px;
     }}
     .metric h3 {{ margin-bottom:6px; color:{PURPLE_ACCENT}; font-weight:700; }}
-    .metric h2 {{ margin-top:0; font-size:28px; color:{TEXT_DARK}; }}
+    .metric h2 {{ 
+        margin-top:0; font-size:28px; 
+        /* Ganti TEXT_DARK dengan var(--text-color) */
+        color: var(--text-color); 
+    }}
 
     .insight {{
+        background-color: var(--secondary-background-color);
         background: linear-gradient(90deg, rgba(155,89,182,0.12), rgba(106,13,173,0.06));
         border-left: 6px solid {PURPLE_MAIN};
         padding: 12px;
         border-radius: 8px;
         margin-top:10px;
-        color:{TEXT_DARK};
+        color: var(--text-color); 
     }}
 
     /* Make chart titles consistent */
     .chart-title {{
         font-weight:700;
-        color:{TEXT_DARK};
+        /* Ganti TEXT_DARK dengan var(--text-color) */
+        color: var(--text-color);
         font-size:18px;
         margin-bottom:6px;
         text-align : center;
@@ -117,7 +128,7 @@ st.markdown(
         font-family: 'Poppins';
         font-weight: 600;
         font-size: 18px;
-        color: {TEXT_DARK};
+        color: var(--text-color); 
         padding-bottom: 4px;
     }}
     </style>
@@ -133,9 +144,10 @@ col1, col2, col3 = st.columns([1, 5, 2])
 with col1: 
     st.image("LogoUPN.png", width=150) 
 with col2: 
+    # Pastikan teks di header tidak menggunakan style color statis yang crash dengan dark mode
     st.markdown( """ <div style='text-align: center;'> <h1>🎓 Dashboard Analisis Kepuasan Mahasiswa Gen Z terhadap Jurusan Pilihan 🎓</h1> 
-                <p style='font-size: 27px; font-weight: bold; margin: 0;'>Kelompok Escape - Sains Data UPN "Veteran Jawa Timur</p> 
-                <p style='font-size: 22px; margin-top: 5px;'>Violin Chantika Ardianisya 24083010043 | Salwa Zahra Rahmawati 24083010083 | Siva Ifin Azzahra 24083010121</p> </div> """, 
+                 <p style='font-size: 27px; font-weight: bold; margin: 0; color: var(--text-color);'>Kelompok Escape - Sains Data UPN "Veteran Jawa Timur</p> 
+                 <p style='font-size: 22px; margin-top: 5px; color: var(--text-color);'>Violin Chantika Ardianisya 24083010043 | Salwa Zahra Rahmawati 24083010083 | Siva Ifin Azzahra 24083010121</p> </div> """, 
                 unsafe_allow_html=True ) 
 with col3: 
     st.image("LogoSada.png", width=150)
@@ -147,7 +159,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.write("")  
+st.write("") 
 
 # ---------------------------
 # LOAD DATA
@@ -181,7 +193,7 @@ if "Program Studi" in data.columns:
     if selected:
         data = data[data["Program Studi"].isin(selected)]
 
-PURPLE_SCALE = px.colors.sequential.PuRd  # built-in, purples
+PURPLE_SCALE = px.colors.sequential.PuRd # built-in, purples
 PRIMARY_HEX = PURPLE_MAIN
 
 # ---------------------------
@@ -244,37 +256,39 @@ if page == "📊 Overview Data":
     colA, colB = st.columns(2)
 
     with colA:
+        # Menghapus 'color: #3a0069;' statis dan mengganti background/card color yang statis
         st.markdown("""
         <div class="card metric" style="
-            background-color: #f5edff;
+            background-color: var(--secondary-background-color);
             padding: 10px 15px;
             border-radius: 10px;
             margin-top: 10px;
             margin-bottom: 30px;
-            color: #3a0069;
+            color: var(--text-color);
             font-family: 'Poppins', sans-serif;
-            font-size: 18px;
+            font-size: 17px;
         ">
             <h4>🧩 Deskripsi Awal</h4>
             <p>Survei ini mengumpulkan data mengenai <b>tingkat kepuasan mahasiswa Gen Z terhadap jurusan yang dipilih</b>, 
             serta faktor-faktor yang mempengaruhi persepsi mereka terhadap pengalaman akademik dan lingkungan kampus.</p>
             <p>Berdasarkan hasil pengumpulan data, terdapat sebanyak <b>103 responden</b> yang berpartisipasi dalam survei ini. 
             Responden tersebut berasal dari berbagai fakultas, antara lain Fakultas Ilmu Komputer, Fakultas Teknik dan Sains, Fakultas Ekonomi dan Bisnis, 
-                    Fakultas Hukum, Fakultas Ilmu Sosial dan Politik, Fakultas Pertanian, Fakultas Arsitektur dan Desain, Fakultas Kedokteran</p>
+                        Fakultas Hukum, Fakultas Ilmu Sosial dan Politik, Fakultas Pertanian, Fakultas Arsitektur dan Desain, Fakultas Kedokteran</p>
         </div>
         """, unsafe_allow_html=True)
 
     with colB:
+        # Menghapus 'color: #3a0069;' statis dan mengganti background/card color yang statis
         st.markdown("""
         <div class="card metric" style="
-            background-color: #f5edff;
+            background-color: var(--secondary-background-color);
             padding: 10px 15px;
             border-radius: 10px;
             margin-top: 10px;
             margin-bottom: 30px;
-            color: #3a0069;
+            color: var(--text-color);
             font-family: 'Poppins', sans-serif;
-            font-size: 18px;
+            font-size: 17px;
         ">
             <h4>🎯 Tujuan Analisis</h4>
             <ul>
@@ -290,6 +304,7 @@ if page == "📊 Overview Data":
 
     # === Preview data ===
     st.markdown("<h4 class='section-title'>🧾 Preview Data</h4>", unsafe_allow_html=True)
+    # Tambahkan style untuk menyesuaikan warna teks di st.dataframe (jika diperlukan)
     st.dataframe(df)
     st.markdown("---")
 
@@ -307,18 +322,19 @@ if page == "📊 Overview Data":
     col3.markdown(f"<div class='card metric'><h3>Rata-rata Kepuasan</h3><h2>{rata_kepuasan}</h2></div>", unsafe_allow_html=True)
     col4.markdown(f"<div class='card metric'><h3>Rata-rata Kesulitan</h3><h2>{rata_kesulitan}</h2></div>", unsafe_allow_html=True)
 
+    # Menghapus 'color: #3a0069;' statis dan mengganti background color statis
     st.markdown("""
-            <div style='
-                background-color: #f5edff;
-                border-left: 5px solid #6A0DAD;
-                padding: 10px 15px;
-                border-radius: 10px;
-                margin-top: 10px;
-                margin-bottom: 30px;
-                color: #3a0069;
-                font-family: "Poppins", sans-serif;
-                font-size: 17px
-            '>
+             <div class = 'insight' style='
+                 background-color: var(--secondary-background-color);
+                 border-left: 5px solid #6A0DAD;
+                 padding: 10px 15px;
+                 border-radius: 10px;
+                 margin-top: 10px;
+                 margin-bottom: 30px;
+                 color:var(--text-color);
+                 font-family: "Poppins", sans-serif;
+                 font-size: 17px
+             '>
         💡 Terdapat <b>103 responden</b> yang berasal dari <b>19 program studi</b>. Nilai <b>rata-rata kepuasan sebesar 7.83</b> menunjukkan bahwa sebagian besar mahasiswa merasa <b>cukup puas</b> terhadap pengalaman akademiknya. Sementara itu, <b>rata-rata tingkat kesulitan sebesar 5.4</b> mengindikasikan bahwa mahasiswa menghadapi <b>tantangan pada tingkat sedang</b> dalam proses pembelajaran.</div>""",
         unsafe_allow_html=True,
     )
@@ -363,16 +379,18 @@ elif page == "📉 Statistika Deskriptif":
         max_motivasi = round(data_filtered["Tinggi Motivasi"].max(), 2) if "Tinggi Motivasi" in data_filtered.columns else None
         avg_kesulitan = round(data_filtered["Tingkat Kesulitan Mata Kuliah"].mean(), 2) if "Tingkat Kesulitan Mata Kuliah" in data_filtered.columns else None
         
+        # Menghapus 'color: #3a0069;' statis dan mengganti background color statis
         st.markdown(
             f"""
-            <div style='
-                background-color: #f5edff;
+            <div class = 'insight'
+                style='
+                background-color: var(--secondary-background-color);
                 border-left: 5px solid #6A0DAD;
                 padding: 10px 15px;
                 border-radius: 10px;
                 margin-top: 10px;
                 margin-bottom: 30px;
-                color: #3a0069;
+                color: var(--text-color);
                 font-family: "Poppins", sans-serif;
                 font-size: 17px
             '>
@@ -417,16 +435,18 @@ elif page == "📉 Statistika Deskriptif":
         )
 
         # === Insight otomatis kategorik ===
+        # Menghapus 'color: #3a0069;' statis dan mengganti background color statis
         st.markdown(
             f"""
-            <div style='
-                background-color: #f5edff;
+            <div class = 'insight'
+                style='
+                background-color: var(--secondary-background-color);
                 border-left: 5px solid #6A0DAD;
                 padding: 10px 15px;
                 border-radius: 10px;
                 margin-top: 10px;
                 margin-bottom: 30px;
-                color: #3a0069;
+                color: var(--text-color);
                 font-family: "Poppins", sans-serif;
                 font-size: 17px
             '>
@@ -480,12 +500,15 @@ elif page == "📈 Visualisasi & Hasil Analisis":
                 marker_line_width=1.5,
             )
 
+            # Menyesuaikan warna chart layout
             fig.update_layout(
-                plot_bgcolor="#F3E5F5",
-                paper_bgcolor="#F3E5F5",
-                font=dict(family="Poppins", color="black", size=14),
+                # Mengganti warna background statis dengan variabel CSS Streamlit
+                plot_bgcolor="var(--secondary-background-color)", 
+                paper_bgcolor="var(--background-color)",
+                font=dict(family="Poppins", color="var(--text-color)", size=14),
                 xaxis=dict(title="Program Studi", tickangle=-45, tickfont=dict(size=14), showgrid=False),
-                yaxis=dict(title="Tingkat Kepuasan", showgrid=True, gridcolor="#28072E"),
+                # Ganti gridcolor agar terlihat di mode gelap
+                yaxis=dict(title="Tingkat Kepuasan", showgrid=True, gridcolor="rgba(106,13,173,0.3)"), 
                 margin=dict(t=50, b=50, l=60, r=40),
                 coloraxis_showscale=True,
             )
@@ -496,11 +519,18 @@ elif page == "📈 Visualisasi & Hasil Analisis":
             top = avg.iloc[0]
             bottom = avg.iloc[-1]
 
+            # Menghapus 'color: #4A148C;' statis dan mengganti background color statis
             st.markdown(
                 f"""
-                <div class = 'insight' style='background-color:#f8f3ff; border-left:6px solid #7B1FA2;
-                            padding:15px; border-radius:12px; margin-top:10px;
-                            font-family:"Poppins" sans-serif; color:#4A148C; font-size:17px;'>
+                <div class = 'insight' 
+                style='background-color: var(--secondary-background-color);
+                border-left:6px solid #7B1FA2;
+                padding:15px; 
+                border-radius:12px; 
+                margin-top:10px;
+                font-family:"Poppins" sans-serif; 
+                color:var(--text-color); 
+                font-size:17px;'>
                     💡 <b>Program Studi {top['Program Studi']}</b> memiliki tingkat kepuasan tertinggi sebesar 
                     <b>{top['Tingkat Kepuasan']:.1f}</b>.<br>
                     Sementara itu, <b>{bottom['Program Studi']}</b> berada di posisi terendah dengan rata-rata kepuasan 
@@ -532,11 +562,12 @@ elif page == "📈 Visualisasi & Hasil Analisis":
         pie.update_traces(
             textinfo="percent+label",
             textfont_size=16,
-            textfont_color="black",
+            textfont_color="var(--text-color)", # Menggunakan variabel teks Streamlit
             pull=[0.03] * len(data["Keinginan Pindah Jurusan"].unique())
         )
 
         #Layout 
+        # Menyesuaikan warna chart layout
         pie.update_layout(
             showlegend=True,
             legend_title_text="Keinginan Pindah Jurusan",
@@ -546,11 +577,11 @@ elif page == "📈 Visualisasi & Hasil Analisis":
                 y=-0.15,
                 xanchor="center",
                 x=0.5,
-                font=dict(size=20, color="black")
+                font=dict(size=20, color="var(--text-color)") # Menggunakan variabel teks Streamlit
             ),
             margin=dict(t=30, b=50, l=30, r=30),
-            paper_bgcolor="#f3e8ff",
-            plot_bgcolor="#F3E5F5"
+            paper_bgcolor="var(--background-color)", # Menggunakan variabel background Streamlit
+            plot_bgcolor="var(--secondary-background-color)" # Menggunakan variabel secondary background Streamlit
         )
 
         st.plotly_chart(pie, use_container_width=True)
@@ -558,24 +589,25 @@ elif page == "📈 Visualisasi & Hasil Analisis":
         #Insight
         pct = data["Keinginan Pindah Jurusan"].value_counts(normalize=True).mul(100).round(1)
         ya = pct.get("Ya", 0)
+        # Menghapus 'color: #4A148C;' statis dan mengganti background color statis
         st.markdown(
-                f"""
-                <div class='insight' 
-                    style='background-color:#f8f3ff; 
-                            border-left:5px solid #7B1FA2;
-                            padding:15px; 
-                            border-radius:12px; 
-                            margin-top:10px;
-                            font-family:Poppins, sans-serif; 
-                            color:#4A148C; 
-                            font-size:17px;'>
-                    💡 Sekitar <b>{ya}%</b> responden menyatakan pernah ingin pindah jurusan. 
-                    Ini indikator penting untuk menilai kecocokan jurusan vs harapan mahasiswa.
-                </div>
-                """,
+                 f"""
+                 <div class='insight' 
+                     style='background-color: var(--secondary-background-color); 
+                             border-left:5px solid #7B1FA2;
+                             padding:15px; 
+                             border-radius:12px; 
+                             margin-top:10px;
+                             font-family:Poppins, sans-serif; 
+                             color:var(--text-color); 
+                             font-size:17px;'>
+                     💡 Sekitar <b>{ya}%</b> responden menyatakan pernah ingin pindah jurusan. 
+                     Ini indikator penting untuk menilai kecocokan jurusan vs harapan mahasiswa.
+                 </div>
+                 """,
                 unsafe_allow_html=True
             )
-    st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
 
     # C. Persepsi terhadap Jurusan (bar charts for several categorical columns)
@@ -610,30 +642,32 @@ elif page == "📈 Visualisasi & Hasil Analisis":
 
             # Layout 
             fig.update_traces(textposition="outside", marker_line_color="white", marker_line_width=0.5)
+            # Menyesuaikan warna chart layout
             fig.update_layout(
                 margin=dict(t=40, b=80),
                 xaxis=dict(title="", tickangle=-35, tickfont=dict(size=16)),
                 yaxis_title=dict(text="Jumlah Responden", font=dict(size=19)),
                 coloraxis_showscale=False,
                 hoverlabel=dict(bgcolor="white", font_size=12, font_family="Poppins"),
-                paper_bgcolor="#f3e8ff",
-                plot_bgcolor="#F3E5F5"
+                paper_bgcolor="var(--background-color)", # Menggunakan variabel background Streamlit
+                plot_bgcolor="var(--secondary-background-color)" # Menggunakan variabel secondary background Streamlit
             )
 
             st.plotly_chart(fig, use_container_width=True)
 
             # Insight 
             top_val = vc.iloc[0][col]
+            # Menghapus 'color: #3a0069;' statis dan mengganti background color statis
             st.markdown(f"""
             <div class = 'insight' 
                 style='
-                background-color: #f5edff;
+                background-color: var(--secondary-background-color);
                 border-left: 5px solid #6A0DAD;
                 padding: 10px 15px;
                 border-radius: 10px;
                 margin-top: 10px;
                 margin-bottom: 30px;
-                color: #3a0069;
+                color: var(--text-color);
                 font-family: "Poppins", sans-serif;
                 font-size: 17px
             '>
@@ -656,11 +690,12 @@ elif page == "🔗 Hubungan Antar Variabel":
         st.info("Tidak ada cukup variabel numerik untuk analisis korelasi.")
     else:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("<div class='chart-title'>Distribusi Keinginan Pindah Jurusan</div>", unsafe_allow_html=True)
+        st.markdown("<div class='chart-title'>Hubungan Antar Variabel</div>", unsafe_allow_html=True)
         corr = data[num_cols].corr()
         fig, ax = plt.subplots(figsize=(5, 3))
-        fig.patch.set_facecolor("#f3e8ff")  
-        ax.set_facecolor("#F3E5F5")         
+        # Mengganti warna background statis dengan variabel CSS Streamlit
+        fig.patch.set_facecolor(st.get_option("theme.backgroundColor") or "#f3e8ff") 
+        ax.set_facecolor(st.get_option("theme.secondaryBackgroundColor") or "#F3E5F5")  
         sns.heatmap(
             corr, 
             annot=True, 
@@ -670,99 +705,102 @@ elif page == "🔗 Hubungan Antar Variabel":
             vmin=-1, 
             vmax=1, 
             cbar_kws={"shrink": 0.3, "aspect": 5, "pad": 0.01},
-            annot_kws={"size": 5, "color": "black"}
+            annot_kws={"size": 5, "color": "black"} # Text anotasi di dalam heatmap
         )
 
         cbar = ax.collections[0].colorbar
         cbar.ax.tick_params(labelsize=4)
-        ax.tick_params(axis='x', labelsize=6, rotation=45)
-        ax.tick_params(axis='y', labelsize=6)
+        # Menyesuaikan warna label di matplotlib
+        text_color = st.get_option("theme.textColor") or "black" 
+        ax.tick_params(axis='x', labelsize=6, rotation=45, colors=text_color)
+        ax.tick_params(axis='y', labelsize=6, colors=text_color)
+        cbar.ax.yaxis.set_tick_params(labelcolor=text_color)
 
         plt.subplots_adjust(bottom=0.25, top=0.95, left=0.25, right=0.90)
 
         plt.tight_layout()
         st.pyplot(fig, use_container_width=True)
+        # Menghapus 'color: #3a0069;' statis dan mengganti background color statis
         st.markdown("""
-            <div class = 'insight' 
-                style='
-                background-color: #f5edff;
-                border-left: 5px solid #6A0DAD;
-                padding: 10px 15px;
-                border-radius: 10px;
-                margin-top: 10px;
-                margin-bottom: 30px;
-                color: #3a0069;
-                font-family: "Poppins", sans-serif;
-                font-size: 17px
-            '>
-        💡 Terdapat <b>korelasi positif</b> yang cukup kuat antara <b>Tingkat Kepuasan dan Tinggi Motivasi</b>, artinya <b>semakin tinggi motivasi mahasiswa, semakin tinggi pula tingkat kepuasan terhadap perkuliahan.</b><br>
-            Selain itu, <b>Jumlah Mata Kuliah Sesuai Minat</b> juga menunjukkan <b>hubungan positif</b> dengan <b>Tingkat Kepuasan</b>, meskipun tidak terlalu kuat tetapi menunjukkan bahwa kesesuaian minat tetap berperan dalam kepuasan belajar.<br>
-            Sementara itu, <b>Jumlah Stress dalam Seminggu</b> memiliki <b>korelasi negatif</b> dengan sebagian besar variabel lainnya, menandakan bahwa <b>semakin tinggi tingkat stres, cenderung menurunkan motivasi dan kepuasan mahasiswa.</b></div>""", unsafe_allow_html=True)
+             <div class = 'insight' 
+                 style='
+                 background-color: var(--secondary-background-color);
+                 border-left: 5px solid #6A0DAD;
+                 padding: 10px 15px;
+                 border-radius: 10px;
+                 margin-top: 10px;
+                 margin-bottom: 30px;
+                 color: var(--text-color);
+                 font-family: "Poppins", sans-serif;
+                 font-size: 16px
+             '>
+                💡 Terdapat <b>korelasi positif</b> yang cukup kuat antara <b>Tingkat Kepuasan dan Tinggi Motivasi</b>, artinya <b>semakin tinggi motivasi mahasiswa, semakin tinggi pula tingkat kepuasan terhadap perkuliahan.</b><br>
+                Selain itu, <b>Jumlah Mata Kuliah Sesuai Minat</b> juga menunjukkan <b>hubungan positif</b> dengan <b>Tingkat Kepuasan</b>, meskipun tidak terlalu kuat tetapi menunjukkan bahwa kesesuaian minat tetap berperan dalam kepuasan belajar.<br>
+                Sementara itu, <b>Jumlah Stress dalam Seminggu</b> memiliki <b>korelasi negatif</b> dengan sebagian besar variabel lainnya, menandakan bahwa <b>semakin tinggi tingkat stres, cenderung menurunkan motivasi dan kepuasan mahasiswa.</b></div>""", unsafe_allow_html=True)
 
         # D. Kombinasi: Pairplot (Seaborn) + Cluster 3D
-    num_cols = ["Tingkat Kepuasan", "Tingkat Kesulitan Mata Kuliah", "Tinggi Motivasi", "Jumlah Mata Kuliah Sesuai Minat", "Jumlah Stress dalam Seminggu"]
-    num_cols = [c for c in num_cols if c in data.columns]
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    if len(num_cols) >= 2:
-        sns.set(style="whitegrid", font="Poppins")
+        num_cols = ["Tingkat Kepuasan", "Tingkat Kesulitan Mata Kuliah", "Tinggi Motivasi", "Jumlah Mata Kuliah Sesuai Minat", "Jumlah Stress dalam Seminggu"]
+        num_cols = [c for c in num_cols if c in data.columns]
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        if len(num_cols) >= 2:
+            sns.set(style="whitegrid", font="Poppins")
 
-        # Pairplot 
-        pairplot_fig = sns.pairplot(
-            data[num_cols].dropna(),
-            diag_kind="kde",
-            corner=True,
-            kind="reg",  
-            plot_kws=dict(       
-                line_kws=dict(color="#4D29A0", lw=1.5),  
-                scatter_kws=dict(s=40, alpha=0.7, color="#4D29A0")  
-            ),
-            diag_kws=dict(color="#4D29A0", fill=True)
-        )
+            # Pairplot 
+            pairplot_fig = sns.pairplot(
+                data[num_cols].dropna(),
+                diag_kind="kde",
+                corner=True,
+                kind="reg",
+                plot_kws=dict( 
+                    line_kws=dict(color="#4D29A0", lw=1.5),
+                    scatter_kws=dict(s=40, alpha=0.7, color="#4D29A0")
+                ),
+                diag_kws=dict(color="#4D29A0", fill=True)
+              )   
 
-        
-        pairplot_fig.fig.patch.set_facecolor("#f3e8ff")  
-        for ax in pairplot_fig.axes.flatten():
-            if ax is not None:
-                ax.set_facecolor("#F3E5F5")  
+            
+            # Mengganti warna background statis dengan variabel CSS Streamlit
+            pairplot_fig.fig.patch.set_facecolor(st.get_option("theme.backgroundColor") or "#f3e8ff")
+            for ax in pairplot_fig.axes.flatten():
+                if ax is not None:
+                    ax.set_facecolor(st.get_option("theme.secondaryBackgroundColor") or "#F3E5F5") 
+                    # Menyesuaikan warna label sumbu agar terlihat di dark mode
+                    ax.xaxis.label.set_color(st.get_option("theme.textColor") or "black") 
+                    ax.yaxis.label.set_color(st.get_option("theme.textColor") or "black")
+                    ax.tick_params(axis='x', colors=st.get_option("theme.textColor") or "black")
+                    ax.tick_params(axis='y', colors=st.get_option("theme.textColor") or "black")
 
-        # Jarak 
-        pairplot_fig.fig.subplots_adjust(wspace=0.3, hspace=0.3)
+            # Jarak 
+            pairplot_fig.fig.subplots_adjust(wspace=0.3, hspace=0.3)
 
-        pairplot_fig.fig.suptitle(
-            "Hubungan Antar Variabel Numerik",
-            fontsize=15,
-            color="#4D29A0",
-            fontfamily="sans-serif",
-            fontweight = 'bold',
-            y=1.02
-        )
+            st.pyplot(pairplot_fig, use_container_width=True)
 
-        st.pyplot(pairplot_fig, use_container_width=True)
-
-        # Insight 
-        st.markdown("""
-        <div class = 'insight'
-            style='
-            background-color: #f5edff;
-            border-left: 5px solid #4D29A0;
-            padding: 10px 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            color: #3a0069;
-            font-family: "Poppins", sans-serif;
-            font-size: 17px;
-        '>
+            # Insight 
+            # Menghapus 'color: #3a0069;' statis dan mengganti background color statis
+            st.markdown("""
+             <div class = 'insight'
+                 style='
+                 background-color: var(--secondary-background-color);
+                 border-left: 5px solid #4D29A0;
+                 padding: 10px 15px;
+                 border-radius: 10px;
+                 margin-top: 10px;
+                 margin-bottom: 30px;
+                 color: var(--text-color);
+                 font-family: "Poppins", sans-serif;
+                 font-size: 16px;
+             '>
         💡 Sebagian besar titik pada scatter plot antara <b>Tingkat Motivasi dan Tingkat Kepuasan</b> membentuk <b>pola naik</b> yang cukup jelas, menunjukkan kecenderungan bahwa mahasiswa dengan <b>motivasi tinggi juga memiliki kepuasan tinggi</b>.
         Sebaliknya, sebaran titik antara <b>Jumlah Stress dalam Seminggu</b> dengan variabel lain tampak <b>menyebar</b> tanpa pola tertentu, menandakan bahwa <b>stres tidak memiliki hubungan linear yang kuat dengan motivasi maupun kepuasan</b>.
         Selain itu, persebaran data yang padat di area nilai menengah menunjukkan bahwa sebagian besar mahasiswa berada pada tingkat motivasi dan kepuasan yang moderat, dengan hanya sedikit yang ekstrem di kedua sisi.
         </div>
         """, unsafe_allow_html=True)
 
-        # Cluster 3D 
+            # Cluster 3D 
         if len(num_cols) >= 3:
             st.markdown("<div class='card'>", unsafe_allow_html=True)
-            st.markdown("<h4 style='text-align:center; color:#5E35B1;'>Cluster 3D Mahasiswa Berdasarkan Aspek Akademik</h4>", unsafe_allow_html=True)
+            # Dihapus: color:#5E35B1; (agar menyesuaikan mode gelap/terang)
+            st.markdown("<div class='chart-title'>Cluster 3D Mahasiswa Berdasarkan Aspek Akademik</div>", unsafe_allow_html=True)
 
             X = data[num_cols].dropna()
             scaler = StandardScaler()
@@ -808,15 +846,14 @@ elif page == "🔗 Hubungan Antar Variabel":
             st.markdown("""
             <div class = 'insight'
                 style='
-                background-color: #f5edff;
+                background-color: var(--secondary-background-color);
                 border-left: 5px solid #4D29A0;
                 padding: 10px 15px;
                 border-radius: 10px;
                 margin-top: 10px;
                 margin-bottom: 30px;
-                color: #3a0069;
                 font-family: "Poppins", sans-serif;
-                font-size: 17px;
+                font-size: 16px;
             '>
             💡 Terlihat adanya beberapa segmen mahasiswa berdasarkan pola nilai atau persepsi akademik.
             Misalnya kelompok dengan <b>motivasi tinggi</b> dan <b>tingkat kesulitan rendah</b>. 
@@ -843,8 +880,7 @@ elif page == "📈 Regresi Berganda":
 
         st.markdown("""
             <div style="
-                font-size: 15px; 
-                color: 'Black'; 
+                font-size: 16px; 
                 font-weight: 400; 
                 font-family: 'Poppins', sans-serif; 
                 margin-bottom: -15px;
@@ -857,8 +893,7 @@ elif page == "📈 Regresi Berganda":
 
         st.markdown("""
             <div style="
-                font-size: 15px; 
-                color: 'Black'; 
+                font-size: 16px; 
                 font-weight: 400; 
                 font-family: 'Poppins', sans-serif; 
                 margin-top: 10px; 
@@ -887,9 +922,8 @@ elif page == "📈 Regresi Berganda":
                 summary_html = f"""
                     <div style="
                         font-family: 'Poppins', Sans-serif;
-                        font-size: 15px;
-                        color: black;
-                        background-color: #f8f8f8;
+                        font-size: 16px;
+                        background-color: var(--secondary-background-color);
                         padding: 15px;
                         border-radius: 10px;
                         border: 1px solid #ddd;
@@ -917,14 +951,17 @@ elif page == "📈 Regresi Berganda":
 
             st.markdown("<div class='card'>", unsafe_allow_html=True)
             st.markdown(f"<div class='chart-title'>Rumus Model & Interpretasi</div>", unsafe_allow_html=True)
+            # Dihapus: color:black;
             st.markdown(f"""
-                <div style="font-size:16px; color:black; font-family:Poppins, sans-serif; margin-bottom:8px;">
+                <div style="font-size:16px; font-family:Poppins, sans-serif; margin-bottom:8px;">
                     <b>Rumus model (estimasi):</b> <code>{equation}</code>
                 </div>
-                <div style="font-size:16px; color:black; font-family:Poppins, sans-serif; margin-bottom:8px;">
+                # Dihapus: color:black;
+                <div style="font-size:16px; font-family:Poppins, sans-serif; margin-bottom:8px;">
                     <b>R-squared:</b> {rsq:.4f} — proporsi variabilitas <b>{dep_var}</b> yang dijelaskan oleh model.
                 </div>
-                <div style="font-size:16px; color:black; font-family:Poppins, sans-serif;">
+                # Dihapus: color:black;
+                <div style="font-size:16px; font-family:Poppins, sans-serif;">
                     <b>Adjusted R-squared:</b> {adj_rsq:.4f}
                 </div>
             """, unsafe_allow_html=True)
@@ -938,8 +975,9 @@ elif page == "📈 Regresi Berganda":
 
             html_table = coef_table.to_html(index=False)
 
+            # Dihapus: color:black;
             st.markdown(f"""
-                <div style="font-size:16px; color:black; font-family:Poppins, sans-serif;">
+                <div style="font-size:16px; font-family:Poppins, sans-serif;">
                     {html_table}
                 </div>
             """, unsafe_allow_html=True)
@@ -955,13 +993,12 @@ elif page == "📈 Regresi Berganda":
             st.markdown(
                 """
                 <div class='insight' style='
-                    background-color: #f5edff;
+                    background-color: var(--secondary-background-color);
                     border-left: 5px solid #4D29A0;
                     padding: 10px 15px;
                     border-radius: 10px;
                     margin-top: 10px;
                     margin-bottom: 30px;
-                    color: #3a0069;
                     font-family: "Poppins", sans-serif;
                     font-size: 16px;
                 '>
@@ -976,20 +1013,19 @@ elif page == "📈 Regresi Berganda":
                 st.markdown(f"<div class='chart-title'>Plot {dep_var} vs {xvar} + Garis Regresi</div>", unsafe_allow_html=True)
                 # scatter dan garis prediksi
                 scatter_fig = px.scatter(model_df, x=xvar, y=dep_var, trendline="ols", trendline_color_override=PRIMARY_HEX,
-                                         width=900, height=500, labels={xvar: xvar, dep_var: dep_var})
+                                             width=900, height=500, labels={xvar: xvar, dep_var: dep_var})
                 scatter_fig.update_traces(marker=dict(size=7, opacity=0.8))
                 scatter_fig.update_layout(transition={"duration":300})
                 st.plotly_chart(scatter_fig, use_container_width=True)
                 st.markdown("""
                     <div class='insight'
                     style='
-                    background-color: #f5edff;
+                    background-color: var(--secondary-background-color);
                     border-left: 5px solid #4D29A0;
                     padding: 10px 15px;
                     border-radius: 10px;
                     margin-top: 10px;
                     margin-bottom: 30px;
-                    color: #3a0069;
                     font-family: "Poppins", sans-serif;
                     font-size: 16px;
                 '>
@@ -1012,13 +1048,12 @@ elif page == "📈 Regresi Berganda":
             st.markdown(f"""
                 <div class='insight'
                     style='
-                        background-color: #f5edff;
+                        background-color: var(--secondary-background-color);
                         border-left: 5px solid #4D29A0;
                         padding: 10px 15px;
                         border-radius: 10px;
                         margin-top: 10px;
                         margin-bottom: 30px;
-                        color: #3a0069;
                         font-family: "Poppins", sans-serif;
                         font-size: 16px;
                         line-height: 1.6;
@@ -1039,14 +1074,13 @@ elif page == "🧩 Kesimpulan":
     with colA:
         st.markdown("""
         <div class="card metric" style="
-            background-color: #f5edff;
+            background-color: var(--secondary-background-color);
             padding: 10px 15px;
             border-radius: 10px;
             margin-top: 10px;
             margin-bottom: 30px;
-            color: #3a0069;
             font-family: 'Poppins', sans-serif;
-            font-size: 19px;
+            font-size: 17px;
         ">
             <h4>Kesimpulan Umum:</h4>
             <p>
@@ -1063,14 +1097,13 @@ elif page == "🧩 Kesimpulan":
     with colB:
         st.markdown("""
         <div class="card metric" style="
-            background-color: #f5edff;
+            background-color: var(--secondary-background-color);
             padding: 10px 15px;
             border-radius: 10px;
             margin-top: 10px;
             margin-bottom: 30px;
-            color: #3a0069;
             font-family: 'Poppins', sans-serif;
-            font-size: 19px;
+            font-size: 17px;
         ">
             <h4>Rekomendasi:</h4>
             <p> 
@@ -1087,4 +1120,5 @@ elif page == "🧩 Kesimpulan":
 # FOOTER (small)
 # ---------------------------
 st.markdown("<br><hr>", unsafe_allow_html=True)
-st.markdown("<div style='text-align:center;color:#6b4b8a;font-size:12px'>Made with 💜 — Dashboard by Kelompok Escape</div>", unsafe_allow_html=True)
+# Dihapus: color:#6b4b8a; (agar menyesuaikan mode gelap/terang)
+st.markdown("<div style='text-align:center;font-size:12px'>Made with 💜 — Dashboard by Kelompok Escape</div>", unsafe_allow_html=True)
